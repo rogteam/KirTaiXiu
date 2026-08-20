@@ -11,12 +11,20 @@ general:
   broadcast-result: true
   gui-title: '&0Tài Xỉu'
 
+# CONTINUOUS = mở ván mới ngay sau khi hiển thị kết quả xong.
+# INTERVAL   = nghỉ interval-seconds rồi mới mở ván mới.
+schedule:
+  mode: CONTINUOUS
+  interval-seconds: 60
+
 bossbar:
   enabled: true
   betting-title: '&6Tài Xỉu &8| &eCòn &f{seconds}s &8| &a{bets} cược &8| &dHũ {jackpot}$'
   result-title: '&6Tài Xỉu &8| &e{d1}-{d2}-{d3} &7(tổng {sum}) &8=> &b{result} &8| &dHũ {jackpot}$'
+  interval-title: '&7Tài Xỉu &8| &fVán tiếp mở sau &e{seconds}s'
   betting-color: YELLOW
   result-color: PURPLE
+  interval-color: WHITE
   style: SEGMENTED_20
 
 economy:
@@ -65,6 +73,7 @@ messages:
   no-permission: '&cBạn không có quyền.'
   economy-missing: '&cKhông tìm thấy Vault economy.'
   round-open: '&aVán mới đã mở! Dùng &e/tx tài <tiền>&a hoặc &e/tx xỉu <tiền>&a.'
+  round-interval: '&7Nghỉ giữa ván. Ván tiếp theo mở sau &e{seconds}&7 giây.'
   already-bet: '&cMỗi ván chỉ được cược 1 lần. Bạn đã cược &e{choice} &cvới &e{amount}$&c.'
   bet-placed: '&aĐã cược &e{amount}$ &avào &e{choice}&a. Phí: &c{fee}$&a.'
   bet-failed: '&cKhông thể đặt cược: {reason}'

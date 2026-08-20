@@ -52,6 +52,7 @@ public final class KirTaiXiuPlugin extends JavaPlugin implements Listener {
     private int secondsLeft;
     private boolean bettingOpen;
     private boolean resultPhase;
+    private boolean intervalPhase;
     private double jackpot;
     private File dataFile;
     private FileConfiguration data;
@@ -140,23 +141,29 @@ public final class KirTaiXiuPlugin extends JavaPlugin implements Listener {
     }
 
     private void startLoop() {
-        secondsLeft = getConfig().getInt("general.round-seconds", 45);
-        bettingOpen = true;
-        resultPhase = false;
-        updateBossBar();
-        broadcast(msg("messages.round-open"));
+        openNewRound();
         roundTask = Bukkit.getScheduler().runTaskTimer(this, () -> {
             updateBossBarPlayers();
             secondsLeft--;
+            if (intervalPhase) {
+                updateBossBar();
+                if (secondsLeft <= 0) openNewRound();
+                return;
+            }
             if (resultPhase) {
                 updateBossBar();
                 if (secondsLeft <= 0) {
-                    secondsLeft = getConfig().getInt("general.round-seconds", 45);
-                    bettingOpen = true;
-                    resultPhase = false;
-                    bets.clear();
-                    broadcast(msg("messages.round-open"));
-                    updateBossBar();
+                    if ("INTERVAL".equalsIgnoreCase(getConfig().getString("schedule.mode", "CONTINUOUS"))) {
+                        intervalPhase = true;
+                        resultPhase = false;
+                        secondsLeft = getConfig().getInt("schedule.interval-seconds", 60);
+                        String intervalMsg = msg("messages.round-interval")
+                            .replace("{seconds}", String.valueOf(secondsLeft));
+                        broadcast(intervalMsg);
+                        updateBossBar();
+                    } else {
+                        openNewRound();
+                    }
                 }
                 return;
             }
@@ -166,6 +173,16 @@ public final class KirTaiXiuPlugin extends JavaPlugin implements Listener {
                 updateBossBar();
             }
         }, 20L, 20L);
+    }
+
+    private void openNewRound() {
+        secondsLeft = getConfig().getInt("general.round-seconds", 180);
+        bettingOpen = true;
+        resultPhase = false;
+        intervalPhase = false;
+        bets.clear();
+        broadcast(msg("messages.round-open"));
+        updateBossBar();
     }
 
     private void settleRound() {
@@ -259,9 +276,17 @@ public final class KirTaiXiuPlugin extends JavaPlugin implements Listener {
 
     private void updateBossBar() {
         if (bossBar == null) return;
+        if (intervalPhase) {
+            int total = getConfig().getInt("schedule.interval-seconds", 60);
+            bossBar.setColor(parseBarColor(getConfig().getString("bossbar.interval-color", "WHITE")));
+            bossBar.setProgress(Math.max(0.0, Math.min(1.0, secondsLeft / Math.max(1.0, total))));
+            bossBar.setTitle(color(getConfig().getString("bossbar.interval-title", "&7Tài Xỉu &8| &fVán tiếp mở sau &e{seconds}s")
+                .replace("{seconds}", String.valueOf(secondsLeft))));
+            return;
+        }
         int total = resultPhase
             ? getConfig().getInt("general.result-display-seconds", 8)
-            : getConfig().getInt("general.round-seconds", 45);
+            : getConfig().getInt("general.round-seconds", 180);
         bossBar.setColor(resultPhase
             ? parseBarColor(getConfig().getString("bossbar.result-color", "PURPLE"))
             : parseBarColor(getConfig().getString("bossbar.betting-color", "YELLOW")));
@@ -736,6 +761,7 @@ public final class KirTaiXiuPlugin extends JavaPlugin implements Listener {
             case "messages.no-permission" -> "&cBạn không có quyền.";
             case "messages.economy-missing" -> "&cKhông tìm thấy Vault economy.";
             case "messages.round-open" -> "&aVán mới đã mở! Dùng &e/tx tài <tiền>&a hoặc &e/tx xỉu <tiền>&a.";
+            case "messages.round-interval" -> "&7Nghỉ giữa ván. Ván tiếp theo mở sau &e{seconds}&7 giây.";
             case "messages.already-bet" -> "&cMỗi ván chỉ được cược 1 lần. Bạn đã cược &e{choice} &cvới &e{amount}$&c.";
             case "messages.bet-placed" -> "&aĐã cược &e{amount}$ &avào &e{choice}&a. Phí: &c{fee}$&a.";
             case "messages.bet-failed" -> "&cKhông thể đặt cược: {reason}";
