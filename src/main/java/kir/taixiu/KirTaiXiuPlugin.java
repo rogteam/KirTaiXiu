@@ -277,13 +277,10 @@ public final class KirTaiXiuPlugin extends JavaPlugin implements Listener {
     private void updateBossBar() {
         if (bossBar == null) return;
         if (intervalPhase) {
-            int total = getConfig().getInt("schedule.interval-seconds", 60);
-            bossBar.setColor(parseBarColor(getConfig().getString("bossbar.interval-color", "WHITE")));
-            bossBar.setProgress(Math.max(0.0, Math.min(1.0, secondsLeft / Math.max(1.0, total))));
-            bossBar.setTitle(color(getConfig().getString("bossbar.interval-title", "&7Tài Xỉu &8| &fVán tiếp mở sau &e{seconds}s")
-                .replace("{seconds}", String.valueOf(secondsLeft))));
+            bossBar.setVisible(false);
             return;
         }
+        bossBar.setVisible(true);
         int total = resultPhase
             ? getConfig().getInt("general.result-display-seconds", 8)
             : getConfig().getInt("general.round-seconds", 180);
@@ -407,8 +404,15 @@ public final class KirTaiXiuPlugin extends JavaPlugin implements Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            if (sender instanceof Player p) openGui(p);
-            else sendHelp(sender, label);
+            if (sender instanceof Player p) {
+                if (intervalPhase) {
+                    p.sendMessage(msg("messages.interval-wait")
+                        .replace("{seconds}", String.valueOf(secondsLeft)));
+                }
+                openGui(p);
+            } else {
+                sendHelp(sender, label);
+            }
             return true;
         }
         String sub = args[0].toLowerCase(Locale.ROOT);
@@ -762,6 +766,7 @@ public final class KirTaiXiuPlugin extends JavaPlugin implements Listener {
             case "messages.economy-missing" -> "&cKhông tìm thấy Vault economy.";
             case "messages.round-open" -> "&aVán mới đã mở! Dùng &e/tx tài <tiền>&a hoặc &e/tx xỉu <tiền>&a.";
             case "messages.round-interval" -> "&7Nghỉ giữa ván. Ván tiếp theo mở sau &e{seconds}&7 giây.";
+            case "messages.interval-wait" -> "&7Ván đang nghỉ giữa hiệp. Ván tiếp theo mở sau &e{seconds}&7 giây.";
             case "messages.already-bet" -> "&cMỗi ván chỉ được cược 1 lần. Bạn đã cược &e{choice} &cvới &e{amount}$&c.";
             case "messages.bet-placed" -> "&aĐã cược &e{amount}$ &avào &e{choice}&a. Phí: &c{fee}$&a.";
             case "messages.bet-failed" -> "&cKhông thể đặt cược: {reason}";
