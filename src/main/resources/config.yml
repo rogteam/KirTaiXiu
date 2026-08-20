@@ -1,0 +1,74 @@
+# Tài Xỉu
+# Config ưu tiên dễ đọc, dễ open-source và dễ tuỳ chỉnh.
+# Mặc định thưởng bằng money thông qua Vault.
+
+general:
+  prefix: '&6[TX]&r '
+  round-seconds: 180
+  result-display-seconds: 8
+  min-bet: 1000
+  max-bet: 10000000
+  broadcast-result: true
+  gui-title: '&0Tài Xỉu'
+
+bossbar:
+  enabled: true
+  betting-title: '&6Tài Xỉu &8| &eCòn &f{seconds}s &8| &a{bets} cược &8| &dHũ {jackpot}$'
+  result-title: '&6Tài Xỉu &8| &e{d1}-{d2}-{d3} &7(tổng {sum}) &8=> &b{result} &8| &dHũ {jackpot}$'
+  betting-color: YELLOW
+  result-color: PURPLE
+  style: SEGMENTED_20
+
+economy:
+  house-fee-percent: 3.0
+  jackpot-share-of-fee-percent: 50.0
+  jackpot-seed: 1000000
+
+payouts:
+  tai-xiu: 1.90
+  chan-le: 1.90
+  total: 10.0
+  triple-any: 28.0
+  triple-exact: 120.0
+
+jackpot:
+  enabled: true
+  trigger-triples: [1, 6]
+  require-exact-triple-bet: true
+  split-between-winners: true
+  reset-to-seed: true
+
+season:
+  enabled: true
+  name: 'Mùa 1'
+  leaderboard-size: 10
+
+history:
+  keep-last: 30
+
+update-check:
+  enabled: true
+  check-on-startup: true
+  repository: rogteam/KirTaiXiu
+  cache-minutes: 30
+  connect-timeout-seconds: 5
+  request-timeout-seconds: 10
+  messages:
+    current: '&7Phiên bản KirTaiXiu hiện tại: &f{current}'
+    checking: '&eĐang kiểm tra bản mới từ GitHub...'
+    latest: '&aBạn đang dùng bản mới nhất: &f{current}'
+    available: '&eCó bản mới &f{latest}&e: &b{url}'
+    failed: '&cKhông thể kiểm tra cập nhật: &7{error}'
+    disabled: '&8Kiểm tra cập nhật đang tắt trong config.'
+
+messages:
+  no-permission: '&cBạn không có quyền.'
+  economy-missing: '&cKhông tìm thấy Vault economy.'
+  round-open: '&aVán mới đã mở! Dùng &e/tx tài <tiền>&a hoặc &e/tx xỉu <tiền>&a.'
+  already-bet: '&cMỗi ván chỉ được cược 1 lần. Bạn đã cược &e{choice} &cvới &e{amount}$&c.'
+  bet-placed: '&aĐã cược &e{amount}$ &avào &e{choice}&a. Phí: &c{fee}$&a.'
+  bet-failed: '&cKhông thể đặt cược: {reason}'
+  result: '&6Kết quả: &e{d1}-{d2}-{d3} &7(tổng {sum}) &f=> &b{result}&f. Người thắng: &a{winners}&f. Jackpot: &6{jackpot}$'
+  win: '&aBạn thắng &e{payout}$ &7(lãi ròng {profit}$)&a.'
+  lose: '&cBạn thua &e{amount}$&c.'
+  jackpot-win: '&dBạn đã nổ hũ và nhận &6{amount}$&d!'

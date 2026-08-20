@@ -1,0 +1,19 @@
+name: KirTaiXiu
+version: 1.0.2
+main: kir.taixiu.KirTaiXiuPlugin
+api-version: '1.21'
+author: KIR
+depend:
+  - Vault
+commands:
+  taixiu:
+    description: Minigame Tài Xỉu - cá cược xúc xắc
+    aliases: [tx]
+    usage: /taixiu [tai|xiu|chan|le|tong|tamhoa|jackpot|history|top|reset|reload|debug]
+permissions:
+  kirtaixiu.use:
+    default: true
+    description: Cho phép tham gia đặt cược Tài Xỉu
+  kirtaixiu.admin:
+    default: op
+    description: Cho phép reload config, xem debug, và reset dữ liệu (stats/history/jackpot)
