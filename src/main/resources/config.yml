@@ -74,6 +74,7 @@ messages:
   economy-missing: '&cKhông tìm thấy Vault economy.'
   round-open: '&aVán mới đã mở! Dùng &e/tx tài <tiền>&a hoặc &e/tx xỉu <tiền>&a.'
   round-interval: '&7Nghỉ giữa ván. Ván tiếp theo mở sau &e{seconds}&7 giây.'
+  interval-wait: '&7Ván đang nghỉ giữa hiệp. Ván tiếp theo mở sau &e{seconds}&7 giây.'
   already-bet: '&cMỗi ván chỉ được cược 1 lần. Bạn đã cược &e{choice} &cvới &e{amount}$&c.'
   bet-placed: '&aĐã cược &e{amount}$ &avào &e{choice}&a. Phí: &c{fee}$&a.'
   bet-failed: '&cKhông thể đặt cược: {reason}'

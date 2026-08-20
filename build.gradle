@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'kir.taixiu'
-version = '1.1.0'
+version = '1.2.0'
 
 java {
     toolchain {
@@ -24,7 +24,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 jar {
-    archiveFileName = 'KirTaiXiu-1.1.0.jar'
+    archiveFileName = 'KirTaiXiu-1.2.0.jar'
 }
 
 test {
